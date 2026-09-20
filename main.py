@@ -95,3 +95,26 @@ print(f"Esfuerzo máximo:      {esfuerzo_b:.2f} MPa")
 
 print()
 print("======================================================")
+import matplotlib.pyplot as plt
+
+
+# --------------------------------------------------
+# GRÁFICA COMPARATIVA
+# --------------------------------------------------
+
+secciones = ["Sección A\n300 × 500 mm", "Sección B\n300 × 600 mm"]
+esfuerzos = [esfuerzo_a, esfuerzo_b]
+
+plt.figure(figsize=(8, 5))
+
+plt.bar(secciones, esfuerzos)
+
+plt.title("Comparación del esfuerzo máximo de flexión")
+plt.ylabel("Esfuerzo máximo (MPa)")
+plt.xlabel("Sección")
+
+for i, valor in enumerate(esfuerzos):
+    plt.text(i, valor, f"{valor:.2f} MPa", ha="center", va="bottom")
+
+plt.tight_layout()
+plt.show()
