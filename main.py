@@ -7,41 +7,51 @@ from analysis import (
 
 
 # --------------------------------------------------
-# DATOS DE LA SECCIÓN
-# --------------------------------------------------
-
-ancho = 300       # mm
-alto = 500        # mm
-
-seccion = analizar_rectangulo(ancho, alto)
-
-
-# --------------------------------------------------
 # DATOS DE LA VIGA
 # --------------------------------------------------
 
-longitud = 6      # m
-carga = 20        # kN
+longitud = 6       # m
+carga = 20         # kN
 
 
 # --------------------------------------------------
-# ANÁLISIS ESTRUCTURAL
+# DEFINICIÓN DE LAS SECCIONES
+# --------------------------------------------------
+
+seccion_a = analizar_rectangulo(300, 500)
+seccion_b = analizar_rectangulo(300, 600)
+
+
+# --------------------------------------------------
+# MOMENTO MÁXIMO DE LA VIGA
 # --------------------------------------------------
 
 momento = momento_maximo_carga_central(carga, longitud)
 
-distancia_fibra = alto / 2
 
-esfuerzo = esfuerzo_flexion(
-    momento,
-    seccion["inercia_x"],
-    distancia_fibra
-)
+# --------------------------------------------------
+# FUNCIÓN PARA ANALIZAR CADA SECCIÓN
+# --------------------------------------------------
 
-modulo = modulo_seccion(
-    seccion["inercia_x"],
-    distancia_fibra
-)
+def calcular_resultados(seccion, alto):
+    distancia_fibra = alto / 2
+
+    modulo = modulo_seccion(
+        seccion["inercia_x"],
+        distancia_fibra
+    )
+
+    esfuerzo = esfuerzo_flexion(
+        momento,
+        seccion["inercia_x"],
+        distancia_fibra
+    )
+
+    return modulo, esfuerzo
+
+
+modulo_a, esfuerzo_a = calcular_resultados(seccion_a, 500)
+modulo_b, esfuerzo_b = calcular_resultados(seccion_b, 600)
 
 
 # --------------------------------------------------
@@ -49,30 +59,39 @@ modulo = modulo_seccion(
 # --------------------------------------------------
 
 print()
-print("==============================================")
-print("       PYCIVIL SECTION ANALYZER")
-print("==============================================")
+print("======================================================")
+print("             PYCIVIL SECTION ANALYZER")
+print("======================================================")
 
 print()
-print("PROPIEDADES DE LA SECCIÓN")
-print("----------------------------------------------")
-print(f"Ancho:              {ancho:.0f} mm")
-print(f"Alto:               {alto:.0f} mm")
-print(f"Área:               {seccion['area']:.2f} mm²")
-print(f"Centroide X:        {seccion['centroide_x']:.2f} mm")
-print(f"Centroide Y:        {seccion['centroide_y']:.2f} mm")
-print(f"Ixx:                {seccion['inercia_x']:.2f} mm⁴")
-print(f"Iyy:                {seccion['inercia_y']:.2f} mm⁴")
+print("DATOS DE LA VIGA")
+print("------------------------------------------------------")
+print(f"Longitud:             {longitud:.2f} m")
+print(f"Carga central:        {carga:.2f} kN")
+print(f"Momento máximo:       {momento:.2f} kN·m")
+
 
 print()
-print("ANÁLISIS DE LA VIGA")
-print("----------------------------------------------")
-print(f"Longitud:           {longitud:.2f} m")
-print(f"Carga central:      {carga:.2f} kN")
-print(f"Momento máximo:     {momento:.2f} kN·m")
-print(f"Distancia extrema:  {distancia_fibra:.2f} mm")
-print(f"Módulo de sección:  {modulo:.2f} mm³")
-print(f"Esfuerzo máximo:    {esfuerzo:.2f} MPa")
+print("COMPARACIÓN DE SECCIONES")
+print("------------------------------------------------------")
 
 print()
-print("==============================================")
+print("SECCIÓN A")
+print(f"Dimensiones:          300 x 500 mm")
+print(f"Área:                 {seccion_a['area']:.2f} mm²")
+print(f"Ixx:                  {seccion_a['inercia_x']:.2f} mm⁴")
+print(f"Módulo de sección:    {modulo_a:.2f} mm³")
+print(f"Esfuerzo máximo:      {esfuerzo_a:.2f} MPa")
+
+
+print()
+print("SECCIÓN B")
+print(f"Dimensiones:          300 x 600 mm")
+print(f"Área:                 {seccion_b['area']:.2f} mm²")
+print(f"Ixx:                  {seccion_b['inercia_x']:.2f} mm⁴")
+print(f"Módulo de sección:    {modulo_b:.2f} mm³")
+print(f"Esfuerzo máximo:      {esfuerzo_b:.2f} MPa")
+
+
+print()
+print("======================================================")
